@@ -22,12 +22,23 @@ jobs:
             archlinux:latest bash -c '
               pacman -Syu --noconfirm &&
               pacman -S --noconfirm archiso &&
+              mkdir -p /build/airootfs/root &&
               for dir in grub efiboot syslinux; do
                 [ -d "/usr/share/archiso/configs/releng/$dir" ] && cp -r "/usr/share/archiso/configs/releng/$dir" /build/ || true
               done
               awk "/^bootmodes=[(]/{flag=1} flag{print} /[)]/ && flag{exit}" /usr/share/archiso/configs/releng/profiledef.sh > /tmp/bootmodes.txt
               awk "/^bootmodes=[(]/{system(\"cat /tmp/bootmodes.txt\"); if (!/[)]/) skip=1; next} skip{if (/[)]/) skip=0; next} {print}" /build/profiledef.sh > /tmp/profiledef.sh && mv /tmp/profiledef.sh /build/profiledef.sh
-              for pkg in syslinux grub efibootmgr; do
+              while IFS= read -r line; do
+                if [[ "$line" =~ \[\"([^\"]+)\"\]= ]]; then
+                  target="${BASH_REMATCH[1]}"
+                  if [[ "$target" == /etc/shadow || "$target" == /etc/gshadow || "$target" == /etc/sudoers* || -e "/build/airootfs$target" ]]; then
+                    echo "$line"
+                  fi
+                else
+                  echo "$line"
+                fi
+              done < /build/profiledef.sh > /tmp/profiledef.sh && mv /tmp/profiledef.sh /build/profiledef.sh
+              for pkg in base syslinux grub efibootmgr; do
                 grep -qxF "$pkg" /build/packages.x86_64 || echo "$pkg" >> /build/packages.x86_64
               done
               mkarchiso -v -w /tmp/archiso-work -o /out /build
