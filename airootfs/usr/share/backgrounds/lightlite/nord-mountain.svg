@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080">
+  <defs>
+    <linearGradient id="sky" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#2E3440" />
+      <stop offset="60%" stop-color="#3B4252" />
+      <stop offset="100%" stop-color="#434C5E" />
+    </linearGradient>
+    <linearGradient id="frost" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#88C0D0" />
+      <stop offset="100%" stop-color="#81A1C1" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background Sky -->
+  <rect width="1920" height="1080" fill="url(#sky)" />
+
+  <!-- Mountain 1 (Deep) -->
+  <polygon points="100,1080 600,450 1100,1080" fill="#4C566A" opacity="0.6" />
+  
+  <!-- Mountain 2 (Mid) -->
+  <polygon points="500,1080 960,350 1450,1080" fill="#5E81AC" opacity="0.8" />
+  <polygon points="960,350 870,470 960,490 1050,470" fill="#ECEFF4" opacity="0.9" />
+
+  <!-- Mountain 3 (Front) -->
+  <polygon points="1050,1080 1500,500 1920,1080" fill="#434C5E" />
+  <polygon points="1500,500 1430,600 1500,610 1570,600" fill="#E5E9F0" />
+
+  <!-- Subtle Logo Circle in Center -->
+  <circle cx="960" cy="220" r="45" fill="none" stroke="url(#frost)" stroke-width="4" />
+  <text x="960" y="228" font-family="'JetBrains Mono', monospace" font-size="22" font-weight="bold" fill="#ECEFF4" text-anchor="middle">LLS</text>
+  <text x="960" y="290" font-family="'JetBrains Mono', monospace" font-size="16" letter-spacing="4" fill="#88C0D0" text-anchor="middle">LIGHT LITE SYSTEM</text>
+</svg>

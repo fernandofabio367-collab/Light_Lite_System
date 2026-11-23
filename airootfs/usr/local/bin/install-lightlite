@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# ==============================================================================
+# Light Lite System (LLS) - Instalador do Sistema
+# ==============================================================================
+
+clear
+echo -e "\e[1;36m"
+cat << "EOF"
+  _      _       _     _     _ _       
+ | |    (_)     | |   | |   (_) |      
+ | |     _  __ _| |__ | |_   _| |_ ___ 
+ | |    | |/ _` | '_ \| __| | | __/ _ \
+ | |____| | (_| | | | | |_  | | ||  __/
+ |______|_|\__, |_| |_|\__| |_|\__\___|
+            __/ |                      
+           |___/  Instalador do Sistema
+EOF
+echo -e "\e[0m"
+echo -e "\e[1;34mBem-vindo ao instalador oficial do Light Lite System (Nord Edition)!\e[0m\n"
+
+if command -v archinstall &> /dev/null; then
+    echo -e "Iniciando assistente de instalação guiado...\n"
+    archinstall
+else
+    echo -e "Para prosseguir com a instalação no seu disco:\n"
+    echo -e "1) Conecte-se à internet (se necessário): \e[1;32mnmtui\e[0m"
+    echo -e "2) Execute o particionador: \e[1;32mcfdisk /dev/sdX\e[0m ou \e[1;32mcfdisk /dev/nvme0n1\e[0m"
+    echo -e "3) Execute: \e[1;32marchinstall\e[0m"
+fi

@@ -1,0 +1,10 @@
+NAME="Light Lite System"
+PRETTY_NAME="Light Lite System (Nord Edition)"
+ID=lightlite
+ID_LIKE=arch
+BUILD_ID=rolling
+ANSI_COLOR="38;2;136;192;208"
+HOME_URL="https://github.com/lightlitesystem"
+SUPPORT_URL="https://github.com/lightlitesystem/issues"
+BUG_REPORT_URL="https://github.com/lightlitesystem/issues"
+LOGO=archlinux
