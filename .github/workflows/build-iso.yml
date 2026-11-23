@@ -2,57 +2,39 @@ name: Build Light Lite System ISO
 
 on:
   push:
-    branches: [ main, master ]
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
-  build-iso:
+  build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-
     steps:
-      - name: Checkout Código
+      - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Build ISO
-     run: |
-       mkdir -p out
-       docker run --privileged --rm \
-         -v ${{ github.workspace }}:/build \
-         -v ${{ github.workspace }}/out:/out \
-         archlinux:latest bash -c '
-           pacman -Syu --noconfirm &&
-           pacman -S --noconfirm archiso &&
-           for dir in grub efiboot syslinux; do
-             [ -d "/usr/share/archiso/configs/releng/$dir" ] && cp -r "/usr/share/archiso/configs/releng/$dir" /build/ || true
-           done
-           awk "/^bootmodes=\(/{flag=1} flag{print} /\)/ && flag{exit}" /usr/share/archiso/configs/releng/profiledef.sh > /tmp/bootmodes.txt
-           awk "/^bootmodes=\(/{system(\"cat /tmp/bootmodes.txt\"); if (!/\)/) skip=1; next} skip{if (/\)/) skip=0; next} {print}" /build/profiledef.sh > /tmp/profiledef.sh && mv /tmp/profiledef.sh /build/profiledef.sh
-           for pkg in syslinux grub efibootmgr; do
-             grep -qxF "$pkg" /build/packages.x86_64 || echo "$pkg" >> /build/packages.x86_64
-           done
-           mkarchiso -v -w /tmp/archiso-work -o /out /build
-         '
-    '
-
-      - name: Gerar Checksum SHA256
         run: |
-          cd out
-          sha256sum *.iso > SHA256SUMS.txt
-          ls -lh
+          mkdir -p out
+          docker run --privileged --rm \
+            -v ${{ github.workspace }}:/build \
+            -v ${{ github.workspace }}/out:/out \
+            archlinux:latest bash -c '
+              pacman -Syu --noconfirm &&
+              pacman -S --noconfirm archiso &&
+              for dir in grub efiboot syslinux; do
+                [ -d "/usr/share/archiso/configs/releng/$dir" ] && cp -r "/usr/share/archiso/configs/releng/$dir" /build/ || true
+              done
+              awk "/^bootmodes=[(]/{flag=1} flag{print} /[)]/ && flag{exit}" /usr/share/archiso/configs/releng/profiledef.sh > /tmp/bootmodes.txt
+              awk "/^bootmodes=[(]/{system(\"cat /tmp/bootmodes.txt\"); if (!/[)]/) skip=1; next} skip{if (/[)]/) skip=0; next} {print}" /build/profiledef.sh > /tmp/profiledef.sh && mv /tmp/profiledef.sh /build/profiledef.sh
+              for pkg in syslinux grub efibootmgr; do
+                grep -qxF "$pkg" /build/packages.x86_64 || echo "$pkg" >> /build/packages.x86_64
+              done
+              mkarchiso -v -w /tmp/archiso-work -o /out /build
+            '
 
-      - name: Fazer Upload do Artefato da ISO
+      - name: Upload ISO Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Light_Lite_System_ISO
-          path: out/*
-          retention-days: 7
-
-      - name: Criar Release no GitHub (Opcional se tag)
-        if: startsWith(github.ref, 'refs/tags/')
-        uses: softprops/action-gh-release@v2
-        with:
-          files: out/*
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          name: Light_Lite_System-ISO
+          path: out/*.iso
