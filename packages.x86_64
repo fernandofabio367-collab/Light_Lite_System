@@ -77,7 +77,7 @@ ttf-font-awesome
 papirus-icon-theme
 
 # --- Desempenho e Otimizações de Memória ---
-systemd-zram-generator
+zram-generator
 irqbalance
 
 # --- Aplicativos e Utilitários de Usuário ---
